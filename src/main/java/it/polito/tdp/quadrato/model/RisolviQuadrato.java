@@ -49,6 +49,15 @@ public void cerca(List<Integer> parziale, int livello ) {
 	}
 	//controlli intermedi , quando arrivo ad avere una riga piena vedo se è una soluzione accettabile altrimenti la 
 	//una riga è completa quando N livello è multiplo di N
+	 /* se N=4 allora inizio a controllare quando il livello è 4 cioè la riga è completata altrimenti non ha senso*/
+
+if(livello%N==0 && livello!=0) //livello%N==0  vuol dire che è multiplo
+{
+	if(!controllaRiga(parziale, (livello/N)-1)) //se livello vale 4 controllo la riga 0
+		//poi l'altro multiplo sarà 8 quindi avrò 4-1=3
+		return; //PRUNING
+	//se la riga non ha il numero magico esco fuori cioè taglio i rami ri ricorsione a certi livelli xk so che non vanno bene
+	}
 	//caso intermedio 
 	for(int valore=1; valore<= N2; valore++)
 	{
@@ -74,6 +83,7 @@ public void cerca(List<Integer> parziale, int livello ) {
 	 */
 	/* qui controlla che tutte le righe/colonne/ diagonali abbiano tutti i numeri altrimenti c'è qualcosa 
 	 * di sbagliato e non ha senso fare la somma*/
+
 	private boolean controlla(List<Integer> parziale) {
 		if(parziale.size()!=this.N*this.N)
 			throw new IllegalArgumentException("Numero di elementi insufficiente") ;
@@ -115,5 +125,16 @@ public void cerca(List<Integer> parziale, int livello ) {
 			return false ;
 
 		return true ;
+	}
+	
+	private boolean controllaRiga (List<Integer> parziale , int numeroRiga)
+	{ //FA LA somma della riga specificata 
+		int somma=0;
+		for(int col=0;col<N;col++)
+		{
+			somma +=parziale.get(numeroRiga*N+col);
+		}
+		return somma==magica; // se sono uguali ritorna vero
+		
 	}
 }
