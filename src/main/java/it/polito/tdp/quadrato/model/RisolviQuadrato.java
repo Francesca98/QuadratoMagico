@@ -1,12 +1,70 @@
 package it.polito.tdp.quadrato.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RisolviQuadrato {
 	private int N ; // lato del quadrato
 	private int N2 ; // numero di caselle (N^2)
 	private int magica ; // costante magica
+	private List<List<Integer>> soluzioni = new LinkedList<>(); //una liste di liste xk hai tutte le soluzioni (che sono liste)
+	
+	/*mi serve un costruttore che mi dica la dimensione del lato N */
+	public RisolviQuadrato(int N){
+		this.N=N;
+		this.N2= N*N; // questa è ridondante la faccio solo per comodita
+		this.magica= N*(N2+1)/2;
+	}
+	
+	/* questi sono gli algoritmi ricorsivi e sono sempre uno di ricerca(quadrati) e
+	 *  poi quello ricorsivo vero e proprio */
+	//Calcola tutti i quadrati magici
+	public List<List<Integer>> quadrati() {
+		List<Integer> parziale = new ArrayList<>();
+		int livello=0;
+		cerca(parziale,livello);
+		return this.soluzioni;
+	}
+	//procedura ricorsiva (privata)
+public void cerca(List<Integer> parziale, int livello ) {
+	if(livello == N2) //caso terminale
+	{
+		if(controlla(parziale))
+		{
+			//vuol dire che è vero quindi è magico
+			//System.out.println(parziale);
+	 //è sbagliato xk in questo modo sto mettendo il riferimento a pariziale  e non gli elementi 
+		/*nel caso di oggetti mutabili nella ricorsione come appunto parziale che a livello 0 causa backtarck è vuoto
+		 * devo fare una copia, se fosse stata una stringa non avrei avuto problemi xk la stringa è immutabile*/
+		
+			List<Integer> copia = new ArrayList<>(parziale); //è una copia non è il riferimento
+			this.soluzioni.add(copia);
+		}
+		
+		
+	
+		return ;
+		
+	}
+	//controlli intermedi , quando arrivo ad avere una riga piena vedo se è una soluzione accettabile altrimenti la 
+	//una riga è completa quando N livello è multiplo di N
+	//caso intermedio 
+	for(int valore=1; valore<= N2; valore++)
+	{
+		if(!parziale.contains(valore)) /*se la soluzione non contiene ancora quell'elemento allora posso 
+		provare a metterlo
+		*/
+		{
+			parziale.add(valore);
+			cerca(parziale,livello+1);
+			parziale.remove(parziale.size()-1); //backtrack
+			
+		}
+	}
+	
+		
+	}
 	
 	
 	/**
@@ -14,6 +72,8 @@ public class RisolviQuadrato {
 	 * @param parziale
 	 * @return
 	 */
+	/* qui controlla che tutte le righe/colonne/ diagonali abbiano tutti i numeri altrimenti c'è qualcosa 
+	 * di sbagliato e non ha senso fare la somma*/
 	private boolean controlla(List<Integer> parziale) {
 		if(parziale.size()!=this.N*this.N)
 			throw new IllegalArgumentException("Numero di elementi insufficiente") ;
